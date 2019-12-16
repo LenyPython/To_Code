@@ -7,26 +7,32 @@ screen.title("Calculator")
 screen.geometry('320x300')
 
 # creating function for numbers input
-def in_num():
-    pass
+def in_num(a):
+    if monitor.get() == '':
+        monitor.insert(0, a)
+    else:
+        number = monitor.get() + a
+        monitor.delete(0, END)
+        monitor.insert(0, number)
+        
 
 # the working screen for digits and operation
 monitor = Entry(screen, bd=2, justify=RIGHT)
 
 
 # create number buttons
-button1 = Button(screen, text='1', height=3, width=3, command=in_num)
-button2 = Button(screen, text='2', height=3, width=3, command=in_num)
-button3 = Button(screen, text='3', height=3, width=3, command=in_num)
+button1 = Button(screen, text='1', height=3, width=3, command=lambda:in_num('1'))
+button2 = Button(screen, text='2', height=3, width=3, command=lambda:in_num('2'))
+button3 = Button(screen, text='3', height=3, width=3, command=lambda:in_num('3'))
 
-button4 = Button(screen, text='4', height=3, width=3, command=in_num)
-button5 = Button(screen, text='5', height=3, width=3, command=in_num)
-button6 = Button(screen, text='6', height=3, width=3, command=in_num)
+button4 = Button(screen, text='4', height=3, width=3, command=lambda:in_num('4'))
+button5 = Button(screen, text='5', height=3, width=3, command=lambda:in_num('5'))
+button6 = Button(screen, text='6', height=3, width=3, command=lambda:in_num('6'))
 
-button7 = Button(screen, text='7', height=3, width=3, command=in_num)
-button8 = Button(screen, text='8', height=3, width=3, command=in_num)
-button9 = Button(screen, text='9', height=3, width=3, command=in_num)
-button0 = Button(screen, text='0', height=3, width=9, command=in_num)
+button7 = Button(screen, text='7', height=3, width=3, command=lambda:in_num('7'))
+button8 = Button(screen, text='8', height=3, width=3, command=lambda:in_num('8'))
+button9 = Button(screen, text='9', height=3, width=3, command=lambda:in_num('9'))
+button0 = Button(screen, text='0', height=3, width=9, command=lambda:in_num('0'))
 
 
 #operation buttons
