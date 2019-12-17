@@ -1,11 +1,9 @@
 from tkinter import *
 from math import *
 
-######################################
-# 
-#ADD A CLEAR BUTTON :/ AND DO THE MATH
-#
-######################################
+
+# ERROR HANDLING& add % #
+#########################
 
 
 # creating main window 'screen'
@@ -13,10 +11,22 @@ screen = Tk()
 screen.title("Calculator")
 
 
+# dictionary for memorization
+memory = {
+        'num1':'',
+        'num2':'',
+        'op':''
+        }
+
+
 # creating function for numbers input
 def in_num(a):
     if monitor.get() == '':
-        monitor.insert(0, a)
+        if a == '.':
+           monitor.insert(0, '0' + a) 
+        else:
+           monitor.insert(0, a)
+        
     elif not monitor.get()[0].isdigit():
         monitor.delete(0, END)
         monitor.insert(0, a)
@@ -29,41 +39,56 @@ def in_num(a):
 def operation(operator):
     operation = {}
     # save operation to dictionary
-    if operator == '+':
-        operation['num1'] = float(monitor.get())
-    elif operator == '-':
-        operation['num1'] = float(monitor.get())
-    elif operator == '*':
-        operation['num1'] = float(monitor.get())
-    elif operator == '/':
-        operation['num1'] = float(monitor.get())
-    elif operator == 'sqrt':
-        operation['num1'] = float(monitor.get())
-    elif operator == '**':
-        operation['num1'] = float(monitor.get())
-    elif operator == 'sin':
-        operation['num1'] = float(monitor.get())
-    elif operator == 'cos':
-        operation['num1'] = float(monitor.get())
-    
+    operation['num1'] = float(monitor.get())
     operation['op'] = operator
        
     # write operation on the screen
     display = operator + ' ' + monitor.get()
     monitor.delete(0, END)
     monitor.insert(0, display)
-    #return dictionary
-    return operation
+    global memory
+    return memory.update(operation)
+
+
+# equal button function
+def equal():
+    global memory
+    answer = ''
+    oper = memory['op']
+    a = memory['num1']
+    if oper == 'sqrt':
+        answer = sqrt(a) 
+    elif oper == 'sin':
+        answer = sin(a)
+    elif oper == 'cos':
+        answer = cos(a)
+    else:
+        memory['num2'] = monitor.get()
+        b = float(memory['num2'])
+        if oper == '+':
+            answer = a+b
+        elif oper == '-':
+            answer = a-b
+        elif oper == '*':
+            answer = a*b
+        elif oper == '/':
+            answer = a/b
+        elif oper == '**':
+            answer = a**b
+    monitor.delete(0, END)
+    monitor.insert(0, answer)
+
 
 #clear function
 def clear():
     monitor.delete(0,END)
+    monitor.insert(0, str(memory['op']) + str(memory['num1']))
 
 
 def clear_everything():
     monitor.delete(0,END)
-    
-
+    global memory
+    memory = {'num1':'','num2':'','op':''}
 
 # the working screen for digits and operation
 monitor = Entry(screen, width=32, bd=2, justify=RIGHT)
@@ -92,7 +117,7 @@ button_mul = Button(screen, text='*', height=3, width=2, command=lambda:operatio
 button_div = Button(screen, text='/', height=3, width=2, command=lambda:operation('/'))
 button_sqr = Button(screen, text='sqrt', height=3, width=2,
         command=lambda:operation('sqrt'))
-button_equ = Button(screen, text='=', height=6, width=2, command=lambda:operation('='))
+button_equ = Button(screen, text='=', height=6, width=2, command=equal)
 button_pow = Button(screen, text='**', height=2, width=2, command=lambda:operation('**'))
 button_sin = Button(screen, text='sin', height=3, width=2,
         command=lambda:operation('sin'))
