@@ -31,33 +31,27 @@ def operation(operator):
     # save operation to dictionary
     if operator == '+':
         operation['num1'] = float(monitor.get())
-        operation['op'] = operator
     elif operator == '-':
         operation['num1'] = float(monitor.get())
-        operation['op'] = operator
     elif operator == '*':
         operation['num1'] = float(monitor.get())
-        operation['op'] = operator
     elif operator == '/':
         operation['num1'] = float(monitor.get())
-        operation['op'] = operator
     elif operator == 'sqrt':
         operation['num1'] = float(monitor.get())
-        operation['op'] = operator
     elif operator == '**':
         operation['num1'] = float(monitor.get())
-        operation['op'] = operator
     elif operator == 'sin':
         operation['num1'] = float(monitor.get())
-        operation['op'] = operator
     elif operator == 'cos':
         operation['num1'] = float(monitor.get())
-        operation['op'] = operator
+    
+    operation['op'] = operator
        
     # write operation on the screen
-    operation = operator + ' ' + monitor.get()
+    display = operator + ' ' + monitor.get()
     monitor.delete(0, END)
-    monitor.insert(0, operation)
+    monitor.insert(0, display)
     #return dictionary
     return operation
 
