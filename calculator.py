@@ -20,30 +20,48 @@ memory = {
 
 # creating function for numbers input
 def in_num(a):
-    if monitor.get() == '' and a == '.':
-        monitor.insert(0, '0'+a)
-    elif monitor.get() != '' and a == '.' and a in monitor.get():
-        pass
-    elif a.isdigit() and monitor.get().isdigit():
-        value = monitor.get() + a
-        monitor.delete(0,END)
-        monitor.insert(0, value)
-    elif a.isdigit() and not monitor.get()[0].isdigit():
-        monitor.delete(0,END)
-        monitor.insert(0, a)
-
+    if not a.isdigit():
+        if a == '.':
+            if monitor.get() == '':
+                monitor.insert(0, '0'+a)
+            else:
+                if a not in monitor.get():
+                    value = monitor.get()
+                    monitor.delete(0,END)
+                    monitor.insert(0, value + a)
+        else:
+            if monitor.get() != '':
+                if monitor.get()[0].isdigit():
+                    value = monitor.get()
+                    monitor.delete(0,END)
+                    monitor.insert(0, a + value)
+                else:
+                    pass
+    else:
+        if monitor.get() != '':
+            if monitor.get()[0].isdigit():
+                value = monitor.get()
+                monitor.delete(0,END)
+                monitor.insert(0, value + a)
+            else:
+                monitor.delete(0,END)
+                monitor.insert(0, a)
+        else:
+            monitor.insert(0, a)
 
 
 def operation(operator):
     global memory
-    if monitor.get()[0].isdigit():
-        # save operation to dictionary
-        memory.update({'num1':monitor.get(),'op':operator})
-
-    # write operation on the screen
-    display = operator + ' ' + monitor.get()
-    monitor.delete(0, END)
-    monitor.insert(0, display)
+    if monitor.get() != '':
+        if monitor.get()[0].isdigit():
+            # save operation to dictionary
+            memory.update({'num1':monitor.get(),'op':operator})
+            # write operation on the screen
+            display = operator + ' ' + monitor.get()
+            monitor.delete(0, END)
+            monitor.insert(0, display)
+        else:
+            pass
 
 
 # equal button function
@@ -52,7 +70,7 @@ def equal():
     answer = ''
     oper = memory['op']
     a = float(memory['num1'])
-    memory['num2'] = monitor.get()
+    memory.update({'num2':monitor.get()})
     b = float(memory['num2'])
     if oper == '+':
         answer = a+b
@@ -66,6 +84,8 @@ def equal():
         answer = a**b
     elif oper == '%':
         answer = a*b/100
+    
+    memory.update({'num1':answer})
     monitor.delete(0, END)
     monitor.insert(0, answer)
 
@@ -86,24 +106,20 @@ def instant_operations(oper):
 
 #clear function
 def clear():
-    if monitor.get()[0].isdigit():
-        monitor.delete(0,END)
-        monitor.insert(0, '{} {}'.format(memory['op'], memory['num1']))
-    else:
-        clear_everything()
+    monitor.delete(0,END)
 
 
 # delete all operation info
 def clear_everything():
     monitor.delete(0,END)
     global memory
-    memory = {'num1':'','num2':'','op':''}
+    memory.update({'num1':'','num2':'','op':''})
 
 
 # delete memory
 def clear_m():
     global memory
-    memory = {'m1':'','m2':'','m3':''}
+    memory.update({'m1':'','m2':'','m3':''})
 
 
 # write to memory
@@ -112,10 +128,11 @@ def memory_write(key):
     if memory[key] == '':
         value = ''
         for x in monitor.get():
-            if x.isdigit():
+            if x.isdigit() or x == '.':
                 value = value+x
         memory.update({key:value})
     else:
+        monitor.delete(0,END)
         monitor.insert(0,memory[key])
 
 
