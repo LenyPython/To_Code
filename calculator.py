@@ -85,7 +85,7 @@ def equal():
     elif oper == '%':
         answer = a*b/100
     
-    memory.update({'num1':answer})
+    memory.update({'num1':b})
     monitor.delete(0, END)
     monitor.insert(0, answer)
 
@@ -95,7 +95,8 @@ def instant_operations(oper):
     memory.update({'num1':monitor.get()})
     a = float(memory['num1'])
     if oper == 'sqrt':
-        answer = sqrt(a) 
+        if a>0:
+            answer = sqrt(a) 
     elif oper == 'sin':
         answer = sin(a)
     elif oper == 'cos':
