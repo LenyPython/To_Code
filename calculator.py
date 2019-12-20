@@ -69,23 +69,31 @@ def equal():
     global memory
     answer = ''
     oper = memory['op']
-    a = float(memory['num1'])
-    memory.update({'num2':monitor.get()})
-    b = float(memory['num2'])
-    if oper == '+':
-        answer = a+b
-    elif oper == '-':
-        answer = a-b
-    elif oper == '*':
-        answer = a*b
-    elif oper == '/':
-        answer = a/b
-    elif oper == '**':
-        answer = a**b
-    elif oper == '%':
-        answer = a*b/100
-    
-    memory.update({'num1':b})
+    try:
+       a = float(memory['num1'])
+       memory.update({'num2':monitor.get()})
+       if memory['num2'] == '' or not monitor.get()[0].isdigit():
+            pass
+       else:
+            b = float(memory['num2'])
+            if oper == '+':
+                answer = a+b
+            elif oper == '-':
+                answer = a-b
+            elif oper == '*':
+                answer = a*b
+            elif oper == '/':
+                answer = a/b
+            elif oper == '**':
+                answer = a**b
+            elif oper == '%':
+                answer = a*b/100
+    except OverflowError:
+        clear_everything()
+        monitor.insert(0, '10')
+    except ValueError:
+        pass
+
     monitor.delete(0, END)
     monitor.insert(0, answer)
 
@@ -103,11 +111,6 @@ def instant_operations(oper):
         answer = cos(a)
     monitor.delete(0, END)
     monitor.insert(0, answer)
-
-
-#clear function
-def clear():
-    monitor.delete(0,END)
 
 
 # delete all operation info
@@ -180,7 +183,7 @@ button_cos = Button(screen, text='cos', height=3, width=2,
 button_sqr = Button(screen, text='sqrt', height=3, width=2,
         command=lambda:instant_operations('sqrt'))
 
-button_c = Button(screen, text='C', height=3, width=2, command=clear)
+button_c = Button(screen, text='C', height=3, width=2, command=lambda:monitor.delete(0,END))
 button_ce = Button(screen, text='CE', height=2, width=2, command=clear_everything)
 
 # insert to calculator grid
