@@ -30,8 +30,6 @@ def input_values(calInput):
                 elif calInput not in memory[num]:
                     memory.update({num:memory.get(num,'') + calInput})
                     monitor.delete(0,END)
-#                elif calInput == '-':
-# add  minus number
                 else:
                     pass
         else:
@@ -47,17 +45,16 @@ def input_values(calInput):
         checkFloat(number,calInput)
 
 def operation(operator):
+#>>>>>>>>>>     elif calInput == '-':
+#>>>>>>>>>>       add  minus number
     global memory
     if monitor.get() != '':
-        if memory['op'] == '':
-            # save operation to dictionary
-            memory.update({'op':operator})
-            # write operation on the screen
-            display = operator + ' ' + memory['num1']
-            monitor.delete(0, END)
-            monitor.insert(0, display)
-        else:
-            pass
+        # save operation to dictionary
+        memory.update({'op':operator})
+        # write operation on the screen
+        display = operator + ' ' + memory['num1']
+        monitor.delete(0, END)
+        monitor.insert(0, display)
 
 
 # equal button function
@@ -92,22 +89,27 @@ def equal():
 
     monitor.delete(0, END)
     monitor.insert(0, answer)
-    memory.update({'num1':''})
+    memory.update({'num1':monitor.get()})
 
 def instant_operations(oper):
     global memory
     answer = ''
     memory.update({'num1':monitor.get()})
-    a = float(memory['num1'])
-    if oper == 'sqrt':
-        if a>0:
-            answer = sqrt(a) 
-    elif oper == 'sin':
-        answer = sin(a/180*3.14)
-    elif oper == 'cos':
-        answer = cos(a)
-    monitor.delete(0, END)
-    monitor.insert(0, answer)
+    try:
+        a = float(memory['num1'])
+        if oper == 'sqrt':
+            if a>0:
+                answer = sqrt(a) 
+            else:
+                messagebox.showerror("Wrong Value", "Can't count sqrt from minus value")
+        elif oper == 'sin':
+            answer = sin(a/180*3.14)
+        elif oper == 'cos':
+            answer = cos(a/180*3.14)
+        monitor.delete(0, END)
+        monitor.insert(0, answer)
+    except ValueError:
+        messagebox.showerror("No number", "You didn't give a number")
 
 
 # delete all operation info
@@ -126,8 +128,8 @@ def clear_m():
 # write to memory
 def memory_write(key):
     global memory
+    value = ''
     if memory[key] == '':
-        value = ''
         for x in monitor.get():
             if x.isdigit() or x == '.':
                 value = value+x
@@ -135,6 +137,10 @@ def memory_write(key):
     else:
         monitor.delete(0,END)
         monitor.insert(0,memory[key])
+        if memory['num1'] == '':
+            memory.update({'num1':memory[key]})
+        else:
+            memory.update({'num2':memory[key]})
 
 
 # the working screen for digits and operation
