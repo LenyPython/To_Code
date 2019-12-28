@@ -44,11 +44,17 @@ def input_values(calInput):
         number = 'num2'
         checkFloat(number,calInput)
 
+
+# chnge that it wont have any minus bugs
 def operation(operator):
-#>>>>>>>>>>     elif calInput == '-':
-#>>>>>>>>>>       add  minus number
     global memory
-    if monitor.get() != '':
+    if memory['num1'] == '' and operator == '-':
+        memory.update({'num1':operator})
+        monitor.insert(0, memory['num1'])
+    elif memory['op'] != '' and operator == '-':
+        memory.update({'num2':operator})
+        monitor.insert(0, memory['num2'])
+    else:
         # save operation to dictionary
         memory.update({'op':operator})
         # write operation on the screen
@@ -91,6 +97,8 @@ def equal():
     monitor.insert(0, answer)
     memory.update({'num1':monitor.get()})
 
+
+# single number operations sin, cos, sqrt
 def instant_operations(oper):
     global memory
     answer = ''
@@ -123,6 +131,22 @@ def clear_everything():
 def clear_m():
     global memory
     memory.update({'m1':'','m2':'','m3':''})
+
+
+# clear last input function
+def clear():
+    global memory
+    if memory['num2'] != '':
+        monitor.delete(0,END)
+        monitor.insert(0, '{} {}'.format(memory['op'], memory['num1']))
+        memory.update({'num2':''})
+    elif memory['op'] != '':
+        monitor.delete(0,END)
+        monitor.insert(0, memory['num1'])
+        memory.update({'op':''})
+    else:
+        monitor.delete(0,END)
+        memory.update({'num1':''})
 
 
 # write to memory
@@ -186,7 +210,7 @@ button_cos = Button(screen, text='cos', height=3, width=2,
 button_sqr = Button(screen, text='sqrt', height=3, width=2,
         command=lambda:instant_operations('sqrt'))
 
-button_c = Button(screen, text='C', height=3, width=2, command=lambda:monitor.delete(0,END))
+button_c = Button(screen, text='C', height=3, width=2, command=clear)
 button_ce = Button(screen, text='CE', height=2, width=2, command=clear_everything)
 
 # insert to calculator grid
