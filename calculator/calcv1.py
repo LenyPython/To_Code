@@ -45,22 +45,42 @@ def input_values(calInput):
         checkFloat(number,calInput)
 
 
-# chnge that it wont have any minus bugs
+# change that it wont have any minus bugs
 def operation(operator):
-    global memory
-    if memory['num1'] == '' and operator == '-':
-        memory.update({'num1':operator})
-        monitor.insert(0, memory['num1'])
-    elif memory['op'] != '' and operator == '-':
-        memory.update({'num2':operator})
-        monitor.insert(0, memory['num2'])
-    else:
-        # save operation to dictionary
-        memory.update({'op':operator})
-        # write operation on the screen
-        display = operator + ' ' + memory['num1']
-        monitor.delete(0, END)
-        monitor.insert(0, display)
+	global memory
+	# save operation to dictionary
+	memory.update({'op':operator})
+	# write operation on the screen
+	display = operator + ' ' + memory['num1']
+	monitor.delete(0, END)
+	monitor.insert(0, display)
+
+#write a minus sign function
+def minussign():
+		global memory
+		#check if first number should have minus sign
+		if memory['num1'] == '':
+			memory.update({'num1':'-'})
+			monitor.delete(0, END)
+			monitor.insert(0, memory['num1'])
+		#delete minus sign in first num if needed
+		elif memory['num1'] == '-':
+			memory.update({'num1':''})
+			monitor.delete(0, END)
+		#make minus sign an operator
+		elif memory['op'] == '':
+			memory.update({'op':'-'})
+			monitor.delete(0, END)
+			monitor.insert(0, memory['op'] + ' ' + memory['num1'])
+		#check for second num to have minus sign
+		elif memory['op'] != '' and memory['num2'] == '':
+			memory.update({'num2':'-'})
+			monitor.delete(0, END)
+			monitor.insert(0, memory['num2'])
+		#delete minus sign from second num if needed
+		elif memory['num2'] == '-':
+			memory.update({'num2':''})
+			monitor.delete(0, END)
 
 
 # equal button function
@@ -195,7 +215,7 @@ button_cm = Button(screen, text='CMem', height=2, width=7, command=clear_m)
 button_equ = Button(screen, text='=', height=6, width=2, command=equal)
 
 button_add = Button(screen, text='+', height=3, width=2, command=lambda:operation('+'))
-button_sub = Button(screen, text='-', height=3, width=2, command=lambda:operation('-'))
+button_sub = Button(screen, text='-', height=3, width=2, command=minussign)
 button_dot = Button(screen, text='.', height=2, width=3, command=lambda:input_values('.'))
 button_mul = Button(screen, text='*', height=3, width=2, command=lambda:operation('*'))
 button_div = Button(screen, text='/', height=3, width=2, command=lambda:operation('/'))
