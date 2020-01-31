@@ -9,40 +9,51 @@ screen.title("Calculator")
 
 # dictionary for data
 memory = {
-        'num1':'',
-        'num2':'',
-        'op':'',
-        'm1':'',
-        'm2':'',
-        'm3':''
-        }
+		'num1':'',
+		'num2':'',
+		'op':'',
+		'm1':'',
+		'm2':'',
+		'm3':''
+		}
 
+# function for '.' dot sign, creating float values
+def dot():
+	global memory
+
+	if memory['op']=='':
+		if memory['num1']=='':
+			memory.update({'num1':'0.'})
+			monitor.delete(0,END)
+			monitor.insert(0, memory['num1'])
+		elif '.' not in memory['num1']:
+			memory.update({'num1':memory.get('num1') + '.'})
+			monitor.delete(0,END)
+			monitor.insert(0, memory['num1'])
+	else:
+		if memory['num2']=='':
+			memory.update({'num2':'0.'})
+			monitor.delete(0,END)
+			monitor.insert(0, memory['num2'])
+		elif '.' not in memory['num2']:
+			memory.update({'num2':memory.get('num2') + '.'})
+			monitor.delete(0,END)
+			monitor.insert(0, memory['num2'])
 
 # creating function for calculator buttons input
 def input_values(calInput):
-    global memory
+	global memory
 
-    def checkFloat(num,calInput):
-        if not calInput.isdigit():
-            if calInput == '.':
-                if memory[num] == '':
-                    memory.update({num:'0' + calInput})
-                elif calInput not in memory[num]:
-                    memory.update({num:memory.get(num,'') + calInput})
-                    monitor.delete(0,END)
-                else:
-                    pass
-        else:
-            memory.update({num:memory.get(num, '') + calInput})
-            monitor.delete(0,END)
-        monitor.insert(0, memory[number])
-
-    if memory['op'] == '':
-        number = 'num1'
-        checkFloat(number,calInput)
-    else:
-        number = 'num2'
-        checkFloat(number,calInput)
+	if memory['op'] == '':
+		num = 'num1'
+		memory.update({num:memory.get(num, '') + calInput})
+		monitor.delete(0,END)
+		monitor.insert(0, memory[num])
+	else:
+		num = 'num2'
+		memory.update({num:memory.get(num, '') + calInput})
+		monitor.delete(0,END)
+		monitor.insert(0, memory[num])
 
 
 # change that it wont have any minus bugs
@@ -57,134 +68,134 @@ def operation(operator):
 
 #write a minus sign function
 def minussign():
-		global memory
-		#check if first number should have minus sign
-		if memory['num1'] == '':
-			memory.update({'num1':'-'})
-			monitor.delete(0, END)
-			monitor.insert(0, memory['num1'])
-		#delete minus sign in first num if needed
-		elif memory['num1'] == '-':
-			memory.update({'num1':''})
-			monitor.delete(0, END)
-		#make minus sign an operator
-		elif memory['op'] == '':
-			memory.update({'op':'-'})
-			monitor.delete(0, END)
-			monitor.insert(0, memory['op'] + ' ' + memory['num1'])
-		#check for second num to have minus sign
-		elif memory['op'] != '' and memory['num2'] == '':
-			memory.update({'num2':'-'})
-			monitor.delete(0, END)
-			monitor.insert(0, memory['num2'])
-		#delete minus sign from second num if needed
-		elif memory['num2'] == '-':
-			memory.update({'num2':''})
-			monitor.delete(0, END)
+	global memory
+	#check if first number should have minus sign
+	if memory['num1'] == '':
+		memory.update({'num1':'-'})
+		monitor.delete(0, END)
+		monitor.insert(0, memory['num1'])
+	#delete minus sign in first num if needed
+	elif memory['num1'] == '-':
+		memory.update({'num1':''})
+		monitor.delete(0, END)
+	#make minus sign an operator
+	elif memory['op'] == '':
+		memory.update({'op':'-'})
+		monitor.delete(0, END)
+		monitor.insert(0, memory['op'] + ' ' + memory['num1'])
+	#check for second num to have minus sign
+	elif memory['op'] != '' and memory['num2'] == '':
+		memory.update({'num2':'-'})
+		monitor.delete(0, END)
+		monitor.insert(0, memory['num2'])
+	#delete minus sign from second num if needed
+	elif memory['num2'] == '-':
+		memory.update({'num2':''})
+		monitor.delete(0, END)
 
 
 # equal button function
 def equal():
-    global memory
-    answer = ''
-    oper = memory['op']
-    try:
-       a = float(memory['num1'])
-       if memory['num2'] == '': 
-            pass
-       else:
-            b = float(memory['num2'])
-            if oper == '+':
-                answer = a+b
-            elif oper == '-':
-                answer = a-b
-            elif oper == '*':
-                answer = a*b
-            elif oper == '/':
-                answer = a/b
-            elif oper == '**':
-                answer = a**b
-            elif oper == '%':
-                answer = a*b/100
-    except OverflowError:
-        messagebox.showerror("Over Flow","Too big number, can't count")
-    except ZeroDivisionError:
-        messagebox.showwarning("Zero Division", "Can't divide by zero!")        
-    except ValueError:
-        messagebox.showwarning("Value Error", "Wrong input, try again!")
+	global memory
+	answer = ''
+	oper = memory['op']
+	try:
+		a = float(memory['num1'])
+		if memory['num2'] == '': 
+		   pass
+		else:
+			b = float(memory['num2'])
+			if oper == '+':
+				answer = a+b
+			elif oper == '-':
+				answer = a-b
+			elif oper == '*':
+				answer = a*b
+			elif oper == '/':
+				answer = a/b
+			elif oper == '**':
+				answer = a**b
+			elif oper == '%':
+				answer = a*b/100
+	except OverflowError:
+		messagebox.showerror("Over Flow","Too big number, can't count")
+	except ZeroDivisionError:
+		messagebox.showwarning("Zero Division", "Can't divide by zero!")        
+	except ValueError:
+		messagebox.showwarning("Value Error", "Wrong input, try again!")
 
-    monitor.delete(0, END)
-    monitor.insert(0, answer)
-    memory.update({'num1':monitor.get()})
+	monitor.delete(0, END)
+	monitor.insert(0, answer)
+	memory.update({'num1':monitor.get()})
 
 
 # single number operations sin, cos, sqrt
 def instant_operations(oper):
-    global memory
-    answer = ''
-    memory.update({'num1':monitor.get()})
-    try:
-        a = float(memory['num1'])
-        if oper == 'sqrt':
-            if a>0:
-                answer = sqrt(a) 
-            else:
-                messagebox.showerror("Wrong Value", "Can't count sqrt from minus value")
-        elif oper == 'sin':
-            answer = sin(a/180*3.14)
-        elif oper == 'cos':
-            answer = cos(a/180*3.14)
-        monitor.delete(0, END)
-        monitor.insert(0, answer)
-    except ValueError:
-        messagebox.showerror("No number", "You didn't give a number")
+	global memory
+	answer = ''
+	memory.update({'num1':monitor.get()})
+	try:
+		a = float(memory['num1'])
+		if oper == 'sqrt':
+			if a>0:
+				answer = sqrt(a) 
+			else:
+				messagebox.showerror("Wrong Value", "Can't count sqrt from minus value")
+		elif oper == 'sin':
+			answer = sin(a/180*3.14)
+		elif oper == 'cos':
+			answer = cos(a/180*3.14)
+		monitor.delete(0, END)
+		monitor.insert(0, answer)
+	except ValueError:
+		messagebox.showerror("No number", "You didn't give a number")
 
 
 # delete all operation info
 def clear_everything():
-    monitor.delete(0,END)
-    global memory
-    memory.update({'num1':'','num2':'','op':''})
+	monitor.delete(0,END)
+	global memory
+	memory.update({'num1':'','num2':'','op':''})
 
 
 # delete memory
 def clear_m():
-    global memory
-    memory.update({'m1':'','m2':'','m3':''})
+	global memory
+	memory.update({'m1':'','m2':'','m3':''})
 
 
 # clear last input function
 def clear():
-    global memory
-    if memory['num2'] != '':
-        monitor.delete(0,END)
-        monitor.insert(0, '{} {}'.format(memory['op'], memory['num1']))
-        memory.update({'num2':''})
-    elif memory['op'] != '':
-        monitor.delete(0,END)
-        monitor.insert(0, memory['num1'])
-        memory.update({'op':''})
-    else:
-        monitor.delete(0,END)
-        memory.update({'num1':''})
+	global memory
+	if memory['num2'] != '':
+		monitor.delete(0,END)
+		monitor.insert(0, '{} {}'.format(memory['op'], memory['num1']))
+		memory.update({'num2':''})
+	elif memory['op'] != '':
+		monitor.delete(0,END)
+		monitor.insert(0, memory['num1'])
+		memory.update({'op':''})
+	else:
+		monitor.delete(0,END)
+		memory.update({'num1':''})
 
 
 # write to memory
 def memory_write(key):
-    global memory
-    value = ''
-    if memory[key] == '':
-        for x in monitor.get():
-            if x.isdigit() or x == '.':
-                value = value+x
-        memory.update({key:value})
-    else:
-        monitor.delete(0,END)
-        monitor.insert(0,memory[key])
-        if memory['num1'] == '':
-            memory.update({'num1':memory[key]})
-        else:
-            memory.update({'num2':memory[key]})
+	global memory
+	value = ''
+	if memory[key] == '':
+		for x in monitor.get():
+			if x.isdigit() or x == '.':
+				value = value+x
+		memory.update({key:value})
+	else:
+		monitor.delete(0,END)
+		monitor.insert(0,memory[key])
+		if memory['num1'] == '':
+			memory.update({'num1':memory[key]})
+		else:
+			memory.update({'num2':memory[key]})
 
 
 # the working screen for digits and operation
@@ -216,19 +227,19 @@ button_equ = Button(screen, text='=', height=6, width=2, command=equal)
 
 button_add = Button(screen, text='+', height=3, width=2, command=lambda:operation('+'))
 button_sub = Button(screen, text='-', height=3, width=2, command=minussign)
-button_dot = Button(screen, text='.', height=2, width=3, command=lambda:input_values('.'))
+button_dot = Button(screen, text='.', height=2, width=3, command=dot)
 button_mul = Button(screen, text='*', height=3, width=2, command=lambda:operation('*'))
 button_div = Button(screen, text='/', height=3, width=2, command=lambda:operation('/'))
 button_pow = Button(screen, text='x^', height=2, width=2, command=lambda:operation('**'))
 
 button_per = Button(screen, text='%', height=2, width=2,
-        command=lambda:operation('%'))
+		command=lambda:operation('%'))
 button_sin = Button(screen, text='sin', height=3, width=2,
-        command=lambda:instant_operations('sin'))
+		command=lambda:instant_operations('sin'))
 button_cos = Button(screen, text='cos', height=3, width=2,
-        command=lambda:instant_operations('cos'))
+		command=lambda:instant_operations('cos'))
 button_sqr = Button(screen, text='sqrt', height=3, width=2,
-        command=lambda:instant_operations('sqrt'))
+		command=lambda:instant_operations('sqrt'))
 
 button_c = Button(screen, text='C', height=3, width=2, command=clear)
 button_ce = Button(screen, text='CE', height=2, width=2, command=clear_everything)
@@ -275,4 +286,4 @@ button_dot.grid(row=5, column=2)
 
 if __name__ == '__main__':
 
-    screen.mainloop()
+	screen.mainloop()
