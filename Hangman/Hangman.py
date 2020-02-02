@@ -4,6 +4,7 @@ import random
 play = 'y'
 
 
+# choose a random word from file, return it to list, and create a guessing lists
 def create_game():
 	with open('ar.txt', 'r') as ar:
 		list_of_words = ar.readlines()
@@ -24,6 +25,7 @@ def letter_check(list_of_used_letters, letter):
 	return guessed_letter.upper()
 
 
+# rewriting and printing out known words
 def rewrite_guessed_part(word, guessed_letter, known_part):
 	for index in range(len(word)):
 		if word[index] == guessed_letter:
@@ -31,12 +33,14 @@ def rewrite_guessed_part(word, guessed_letter, known_part):
 	return known_part
 
 
+# print out your result
 def conclusion(word, guessed, tries):
 	print('The word was: ' + word)
 	print('You guessed ' + ''.join(guessed))
 	print('You tried ' + ','.join(tries))
 
 
+# count for chances that left
 def count_chances(remaining_chances, used, word, letter):
 	if letter in used:
 		return remaining_chances
@@ -46,33 +50,33 @@ def count_chances(remaining_chances, used, word, letter):
 		return remaining_chances
 
 
+# graphical print hangman
 def print_hangman(left):
-	if left == 6:
-		print('Good!')
-	elif left == 5:
-		print('/ \\')
-	elif left == 4:
-		print(' |')
-		print('/ \\')
-	elif left == 3:
-		print('/|\\')
-		print(' |')
-		print('/ \\')
-	elif left == 2:
-		print(' O')
-		print('/|\\')
-		print(' |')
-		print('/ \\')
-	elif left == 1:
-		print('  |')
-		print(' O|')
-		print('/|\\')
-		print(' |')
-		print('/ \\')
-	elif left == 0:
-		print('You died!')
-	else:
-		print("Congratz!! You won!!")
+    print('----------------')
+    if left == 6:
+            print('Good!')
+    elif left == 5:
+            print('/ \\')
+    elif left == 4:
+            print(' |')
+            print('/ \\')
+    elif left == 3:
+            print('/|\\')
+            print(' |')
+            print('/ \\')
+    elif left == 2:
+            print(' O')
+            print('/|\\')
+            print(' |')
+            print('/ \\')
+    elif left == 1:
+            print('  |')
+            print(' O|')
+            print('/|\\')
+            print(' |')
+            print('/ \\')
+    elif left == 0:
+            print('You died!')
 
 
 if __name__ == '__main__':
@@ -95,8 +99,8 @@ if __name__ == '__main__':
 			chances = count_chances(chances, used_letters, random_word, guess)
 
 			print(''.join(guessed_part))
-			print('You got ' + str(chances) + ' chances left')
 			print_hangman(chances)
+			print('You got ' + str(chances) + ' chances left')
 			if guess not in used_letters:
 				used_letters.append(guess)
 
