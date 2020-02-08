@@ -24,4 +24,4 @@ filetype indent on
 autocmd Filetype python setlocal noexpandtab ts=4 sts=4 sw=4
 
 " Leave insert mode on ii
-inore ii <Esc>
+inore qq  <Esc>
