@@ -1,8 +1,9 @@
 import pygame
+# import mixer to create a sound effects in game
+from pygame import mixer
 import random
 from math import sqrt
 
-score = 0
 # initialize pygame module
 pygame.init()
 
@@ -11,6 +12,10 @@ screen = pygame.display.set_mode((800, 600))
 
 # add a background image
 background = pygame.image.load('BG.png')
+# add a bg sound load .wav file for sound
+mixer.music.load('bg.wav')
+# play music once, for looping infinitely ad -1 argument
+mixer.music.play(-1)
 
 # add a title to the main window
 pygame.display.set_caption("SSSSSSpaceeee IIInvaders")
@@ -30,24 +35,35 @@ playerX_change = 0
 def player(x, y):
 	screen.blit(playerimg, (x, y))
 
+# add a score text on screen, function
+score = 0
+# chose font and font size for text displayed
+font = pygame.font.Font('freesansbold.ttf', 25)
+def viewScore():
+	# render font, True value for display, choose RGB color
+	scored = font.render("Score : {}".format(score), True, (30,200,20))
+	# add on screen scored layer
+	screen.blit(scored, (10, 10))
+
 # creating an enemy class
 class Enemy:
 	def __init__(self):
 		# Add a enemy graphic, position, function to put on screen
-		self.enemyimg = pygame.image.load('enemy.png')
+		self.img = pygame.image.load('enemy.png')
 		# rate of change of position of a enemy
-		self.enemyX_change = 5
-		self.enemyY_change = 50
+		self.Xchange = 5
+		self.Ychange = 50
 		# Add a enemy starting coordinates
-		self.enemyX = random.randint(0, 710)
-		self.enemyY = random.randint(10,100)
-# random enemy
-randAlien = Enemy()
-	
-# puting enemy on screen, call function after
-# calling the screen in main loop
-def enemy(alien):
-	screen.blit(alien.enemyimg, (alien.enemyX, alien.enemyY))
+		self.X = random.randint(0, 710)
+		self.Y = random.randint(10,100)
+	# puting enemy on screen, call function after
+	# calling the screen in main loop
+	def generate(self):
+		screen.blit(self.img, (self.X, self.Y))
+
+# list of all created enemies
+Enemies = [Enemy() for x in range(6)]
+
 
 # Add a bullet graphic
 bulletimg = pygame.image.load('bullet.png')
@@ -55,7 +71,7 @@ bulletimg = pygame.image.load('bullet.png')
 bulletX = 0
 bulletY = 500
 # rate of change of position of a bullet
-bulletY_change = 10
+bulletY_change = 20
 # add a state for ready to shoot or not
 # two states, 'fired' for moving bullet and 'ready' for no bullet 
 bullet_state = "ready"
@@ -96,13 +112,16 @@ while running:
 		if event.type == pygame.KEYDOWN:
 			# if key is pressed change the rate of change of position
 			if event.key == pygame.K_LEFT:
-				playerX_change = -8
+				playerX_change = -13
 			if event.key == pygame.K_RIGHT:
-				playerX_change = 8
+				playerX_change = 13
 			# fire bullet on SPACE key
 			if event.key == pygame.K_SPACE:
 				# check readines of bullet befor shooting
 				if bullet_state is "ready":
+					# add a bullet sound at space when bullet is ready
+					#bulletSound = mixer.Sound('pew.wav')
+					#bulletSound.play()
 					# save bullet x coordinate to variable
 					bulletX = playerX
 					fire(bulletX)
@@ -114,7 +133,6 @@ while running:
 
 	# change position of player and enemy
 	playerX += playerX_change
-	randAlien.enemyX += randAlien.enemyX_change
 	# bullet movement in Y axis after firing
 	if bullet_state is "fired":
 		fire(bulletX)
@@ -124,35 +142,42 @@ while running:
 		bullet_state = "ready"
 		bulletY = 500
 
-	# check for bullet enemy hit/colision
-	colision = check_colision(randAlien.enemyX, bulletX, randAlien.enemyY, bulletY)
-	if colision:
-		# reset bullet
-		bullet_state = "ready"
-		bulletY = 500
-		# if colision occurs generate new enemy and add a poit to score
-		randAlien.enemyX = random.randint(0, 710)
-		randAlien.enemyY = random.randint(20, 100)
-		score += 1
-		print(score)
-
-
 	# boundry function for keeping all on screen
 	if playerX < 0:
 		playerX = 0
 	elif playerX > 750:
 		playerX = 750
-	if randAlien.enemyX < 0:
-		randAlien.enemyX_change =	5
-		randAlien.enemyY += randAlien.enemyY_change
-	elif randAlien.enemyX >= 750:
-		randAlien.enemyX_change = -5
-		randAlien.enemyY += randAlien.enemyY_change
+
+	# aliens movement function for list Enemies in line 46
+	for Alien in Enemies:
+		Alien.X += Alien.Xchange
+		if Alien.X < 0:
+			Alien.Xchange =	5
+			Alien.Y += Alien.Ychange
+		elif Alien.X >= 750:
+			Alien.Xchange = -5
+			Alien.Y += Alien.Ychange
+		# check for bullet enemy hit/colision
+		colision = check_colision(Alien.X, bulletX, Alien.Y, bulletY)
+		if colision:
+			# add a sound on bullet collision with alien
+			#colisionSound = mixer.Sound('explosion.wav')
+			#colisionSound.play()
+			# reset bullet
+			bullet_state = "ready"
+			bulletY = 500
+			# if colision occurs generate new enemy and add a poit to score
+			Alien.X = random.randint(0, 710)
+			Alien.Y = random.randint(20, 100)
+			score += 1
+		# put enemie on screen
+		Alien.generate()
 
 	# call player and enemy func/ create player and enemy char
 	player(playerX, playerY)
+	# call score function to put score on screen
+	viewScore()
 
-	enemy(randAlien)
 	pygame.display.update()
 
 
