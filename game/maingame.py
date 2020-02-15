@@ -10,30 +10,39 @@ pygame.init()
 # create the screen function with 800width and 600height
 screen = pygame.display.set_mode((800, 600))
 
+# writing a  clock for timing and fps count
+clock = pygame.time.Clock()
+
 # add a background image
-background = pygame.image.load('BG.png')
+background = pygame.image.load('graphics/BG.png')
 # add a bg sound load .wav file for sound
 mixer.music.load('bg.wav')
+# add a bullet sound at space when bullet is ready
+bulletSound = mixer.Sound('pew.wav')
+# add a sound on bullet collision with alien
+colisionSound = mixer.Sound('explosion.wav')
 # play music once, for looping infinitely ad -1 argument
 mixer.music.play(-1)
 
 # add a title to the main window
 pygame.display.set_caption("SSSSSSpaceeee IIInvaders")
 # create an icon variable with .display.set_ to set window properties
-icon = pygame.image.load('icon.png')
+icon = pygame.image.load('graphics/icon.png')
 pygame.display.set_icon(icon)
 
 # Add a player graphic, position, function to put on screen
-playerimg = pygame.image.load('player.png')
+playerimg = [
+		pygame.image.load('graphics/player/player-1.png'),
+		pygame.image.load('graphics/player/player-2.png'),
+		pygame.image.load('graphics/player/player-3.png'),
+		pygame.image.load('graphics/player/player-4.png'),
+		]
+
 # Add a player starting coordinates
 playerX = 400
 playerY = 520
 # rate of change of position of a player
 playerX_change = 0
-# puting player on screen, call function after
-# calling the screen in main loop
-def player(x, y):
-	screen.blit(playerimg, (x, y))
 
 # add a score text on screen, function
 score = 0
@@ -49,13 +58,16 @@ def viewScore():
 class Enemy:
 	def __init__(self):
 		# Add a enemy graphic, position, function to put on screen
-		self.img = pygame.image.load('enemy.png')
+		self.img = pygame.image.load('graphics/enemy/enemy.png')
+		# add enemy height and width
+		self.width = 64
+		self.height = 64
 		# rate of change of position of a enemy
 		self.Xchange = 5
 		self.Ychange = 50
 		# Add a enemy starting coordinates
 		self.X = random.randint(0, 710)
-		self.Y = random.randint(10,100)
+		self.Y = random.randint(0,50)
 	# puting enemy on screen, call function after
 	# calling the screen in main loop
 	def generate(self):
@@ -66,7 +78,7 @@ Enemies = [Enemy() for x in range(6)]
 
 
 # Add a bullet graphic
-bulletimg = pygame.image.load('bullet.png')
+bulletimg = pygame.image.load('graphics/bullet.png')
 # Add a bullet starting coordinates
 bulletX = 0
 bulletY = 500
@@ -81,7 +93,7 @@ def fire(x):
 	global bullet_state
 	bullet_state = "fired"
 	# put bullet on screen
-	screen.blit(bulletimg,(x+43,bulletY))
+	screen.blit(bulletimg,(x+58,bulletY))
 
 # create a colision of bullet and enemy
 def check_colision(x1,x2,y1,y2):
@@ -90,17 +102,30 @@ def check_colision(x1,x2,y1,y2):
 	if distance < 35:
 		return True
 
+# variable for counting image changes in time
+ImgChange = 0
+# background img and (0,0) position
+def redrawWindow(playerX, playerY):
+	global ImgChange 
+	screen.blit(background,(0,0))
+	# counting to 5 fps with ImgChange var for changing obj pics
+	if ImgChange > 60:
+		ImgChange = 0
+	# puting player on screen
+	# list/ array of images to display in sequence, for now just 0 index
+	screen.blit(playerimg[(ImgChange//15)-1], (playerX, playerY))
+	ImgChange += 1
+
+
 # create a loop for the program
 running = True
 while running:
 
-	# RGB => Red, Green, Blue color to fill bg
-	# range from 0 till 255 check color online
-	screen.fill((0,0,0))
-	# add a bg img after loading the screen, with 
-	# background img and (0,0) position
-	screen.blit(background,(0,0))
+	# adding fps ration with clock tick
+	clock.tick(60)
 
+	# drawing all on screen
+	redrawWindow(playerX, playerY)
 	
 	# write an event for ending game
 	for event in pygame.event.get():
@@ -119,8 +144,7 @@ while running:
 			if event.key == pygame.K_SPACE:
 				# check readines of bullet befor shooting
 				if bullet_state is "ready":
-					# add a bullet sound at space when bullet is ready
-					#bulletSound = mixer.Sound('pew.wav')
+					# play bullet sound saved at begining
 					#bulletSound.play()
 					# save bullet x coordinate to variable
 					bulletX = playerX
@@ -160,9 +184,8 @@ while running:
 		# check for bullet enemy hit/colision
 		colision = check_colision(Alien.X, bulletX, Alien.Y, bulletY)
 		if colision:
-			# add a sound on bullet collision with alien
-			#colisionSound = mixer.Sound('explosion.wav')
-			#colisionSound.play()
+			# play sound of colision
+			# colisionSound.play()
 			# reset bullet
 			bullet_state = "ready"
 			bulletY = 500
@@ -173,12 +196,11 @@ while running:
 		# put enemie on screen
 		Alien.generate()
 
-	# call player and enemy func/ create player and enemy char
-	player(playerX, playerY)
 	# call score function to put score on screen
 	viewScore()
 
 	pygame.display.update()
 
 
+pygame.quit()
 	
