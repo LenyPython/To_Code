@@ -16,11 +16,11 @@ clock = pygame.time.Clock()
 # add a background image
 background = pygame.image.load('graphics/BG.png')
 # add a bg sound load .wav file for sound
-mixer.music.load('bg.wav')
+mixer.music.load('sound/bg.wav')
 # add a bullet sound at space when bullet is ready
-bulletSound = mixer.Sound('pew.wav')
+bulletSound = mixer.Sound('sound/pew.wav')
 # add a sound on bullet collision with alien
-colisionSound = mixer.Sound('explosion.wav')
+colisionSound = mixer.Sound('sound/explosion.wav')
 # play music once, for looping infinitely ad -1 argument
 mixer.music.play(-1)
 
@@ -57,24 +57,28 @@ def viewScore():
 # creating an enemy class
 class Enemy:
 	def __init__(self):
-		# Add a enemy graphic, position, function to put on screen
-		self.img = pygame.image.load('graphics/enemy/enemy.png')
+		# Add a enemy graphics from files
+		self.img = [
+				pygame.image.load('graphics/enemy/enemy-1.png'),
+				pygame.image.load('graphics/enemy/enemy-2.png'),
+				pygame.image.load('graphics/enemy/enemy-3.png'),
+				pygame.image.load('graphics/enemy/enemy-4.png'),
+				]
 		# add enemy height and width
 		self.width = 64
 		self.height = 64
 		# rate of change of position of a enemy
-		self.Xchange = 5
+		self.Xchange = random.randint(2,10)
 		self.Ychange = 50
 		# Add a enemy starting coordinates
 		self.X = random.randint(0, 710)
 		self.Y = random.randint(0,50)
-	# puting enemy on screen, call function after
-	# calling the screen in main loop
-	def generate(self):
-		screen.blit(self.img, (self.X, self.Y))
-
+	# puting enemy in window, call function after
+	def generate(self, num):
+		screen.blit(self.img[(num//15)-1], (self.X, self.Y))
+		
 # list of all created enemies
-Enemies = [Enemy() for x in range(6)]
+Enemies = [Enemy() for i in range(6)]
 
 
 # Add a bullet graphic
@@ -115,6 +119,9 @@ def redrawWindow(playerX, playerY):
 	# list/ array of images to display in sequence, for now just 0 index
 	screen.blit(playerimg[(ImgChange//15)-1], (playerX, playerY))
 	ImgChange += 1
+	for Alien in Enemies:
+		# put enemie on screen
+		Alien.generate(ImgChange)
 
 
 # create a loop for the program
@@ -176,10 +183,10 @@ while running:
 	for Alien in Enemies:
 		Alien.X += Alien.Xchange
 		if Alien.X < 0:
-			Alien.Xchange =	5
+			Alien.Xchange =	-Alien.Xchange
 			Alien.Y += Alien.Ychange
 		elif Alien.X >= 750:
-			Alien.Xchange = -5
+			Alien.Xchange = -Alien.Xchange
 			Alien.Y += Alien.Ychange
 		# check for bullet enemy hit/colision
 		colision = check_colision(Alien.X, bulletX, Alien.Y, bulletY)
@@ -189,12 +196,12 @@ while running:
 			# reset bullet
 			bullet_state = "ready"
 			bulletY = 500
-			# if colision occurs generate new enemy and add a poit to score
+			# if colision occurs generate new enemy and add a point to score
 			Alien.X = random.randint(0, 710)
 			Alien.Y = random.randint(20, 100)
+			# change alien speed
+			Alien.Xchange = random.randint(2,10)
 			score += 1
-		# put enemie on screen
-		Alien.generate()
 
 	# call score function to put score on screen
 	viewScore()
