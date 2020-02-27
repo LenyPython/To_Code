@@ -23,11 +23,6 @@ ProjectileNumber = 0
 Accuracy = 0
 # list of all created enemies
 Enemies = [Enemy() for i in range(6)]
-# list of all bullets shot
-Projectiles = [
-		Bullet(),
-		Bullet()
-		]
 # creating a player object
 Player = Player()
 
@@ -70,12 +65,12 @@ def redrawWindow():
 	for Alien in Enemies:
 		# put enemie on screen
 		Alien.generate(ImgChange, MainWindow)
-	for Bullet in Projectiles:
+	for Bullet in Player.ammo:
 		Bullet.fired(MainWindow)
 
 # player movement function
 def PlayerPositionCheck():
-	global ProjectileNumber, Projectiles, running
+	global ProjectileNumber, running
 	# write an event for ending game
 	for event in pg.event.get():
 		# check for event.type, what is happening in game
@@ -94,7 +89,7 @@ def PlayerPositionCheck():
 				#########################
 				#PLACE TO ADD A PROJECTILES GENERATION
 				########################
-				for Bullet in Projectiles:
+				for Bullet in Player.ammo:
 					# check readines of bullet befor shooting
 					if Bullet.state is "ready":
 						# play bullet sound saved at begining
@@ -139,7 +134,7 @@ def AlienPositionCheck():
 			Alien.Y += Alien.Ychange
 
 		# check for bullet enemy hit/colision
-		for Bullet in Projectiles:
+		for Bullet in Player.ammo:
 			colision = CheckColision(Alien,Bullet)
 			if colision:
 				# play sound of colision

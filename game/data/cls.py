@@ -39,10 +39,16 @@ class Player:
 		# Add a player starting coordinates
 		self.X = 400
 		self.Y = 520
-		# adding number of bullets available
-		self.ammo = 2
 		# rate of change of position of a player
 		self.Xchange = 0
+		# list of avaiable bullets
+		self.ammo = [
+			Bullet(),
+			Bullet()
+			]
+	# method for adding extra bullet to player ammunition
+	def BonusBullet(self):
+		self.ammo.append(Bullet())
 
 # creating a projectalies class for bullets
 class Bullet:
@@ -53,7 +59,7 @@ class Bullet:
 		self.X = 0
 		self.Y = 500
 		# rate of change of position of a bullet
-		self.Ychange = 2
+		self.Ychange = 4
 		# add a state for ready to shoot or not
 		# two states, 'fired' for moving bullet and 'ready' for no bullet 
 		self.state = "ready"
